@@ -664,6 +664,137 @@
         color: #c9c3b6;
         background: #23221f;
       }
+      /* ================= 내 손글씨 학습 ================= */
+      .hw-train-btn {
+        background: transparent;
+        color: #ecc482;
+        border: 1px dashed #6b5a3e;
+        border-radius: 6px;
+        padding: 6px 10px;
+        font: inherit;
+        cursor: pointer;
+      }
+      .hw-train-btn:hover { border-style: solid; background: #272521; }
+      .hw-train-btn:focus-visible { outline: 2px solid #ecc482; outline-offset: 2px; }
+
+      /* 손글씨 모드: 글자 하나가 SVG 하나. 줄 높이는 기존 글자와 같게 둔다 */
+      .hw-glyph {
+        display: inline-block;
+        width: 1em;
+        height: 1.05em;
+        vertical-align: -0.2em;
+        overflow: visible;
+        filter: drop-shadow(0 0 0.4px rgba(25, 20, 15, 0.6));
+      }
+      .hw-glyph.digit { width: 0.62em; }
+      .hw-glyph path {
+        fill: none;
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .hw-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(8, 7, 6, 0.72);
+        padding: 16px;
+      }
+      .hw-modal[hidden] { display: none; }
+      .hw-card {
+        width: min(560px, 100%);
+        max-height: 100%;
+        overflow-y: auto;
+        background: #d8cfbb;
+        color: #2a241c;
+        border-radius: 4px;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+        padding: 22px 24px 20px;
+        font-family: "Gowun Batang", serif;
+        user-select: none;
+      }
+      .hw-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 12px;
+        border-bottom: 1px solid #b3a68c;
+        padding-bottom: 10px;
+      }
+      .hw-head h2 { font-size: 19px; font-weight: 700; }
+      .hw-close {
+        background: none; border: none; font-size: 22px; line-height: 1;
+        color: #5b4f3d; cursor: pointer; padding: 2px 6px;
+      }
+      .hw-sub { font-size: 13px; color: #5b4f3d; margin: 10px 0 14px; line-height: 1.6; }
+      .hw-body { display: flex; gap: 18px; align-items: flex-start; flex-wrap: wrap; }
+      .hw-target {
+        width: 86px;
+        text-align: center;
+      }
+      .hw-target-char {
+        font-size: 64px;
+        line-height: 1;
+        font-weight: 700;
+        color: #3a2f22;
+      }
+      .hw-target-meta { font-size: 12px; color: #6b5d48; margin-top: 8px; line-height: 1.5; }
+      .hw-pad-wrap { position: relative; }
+      #hwPad {
+        display: block;
+        width: 260px;
+        height: 260px;
+        background: #efe8d8;
+        border: 1px solid #9c8c70;
+        touch-action: none;
+        cursor: crosshair;
+      }
+      .hw-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+      .hw-actions button, .hw-foot button {
+        font: inherit; font-size: 13px; cursor: pointer;
+        border-radius: 4px; padding: 7px 12px;
+        border: 1px solid #8a7a5e; background: #e8e0cd; color: #2a241c;
+      }
+      .hw-actions button.primary, .hw-foot button.primary {
+        background: #2a241c; color: #ecc482; border-color: #2a241c;
+      }
+      .hw-actions button:focus-visible, .hw-foot button:focus-visible,
+      .hw-grid button:focus-visible { outline: 2px solid #2a241c; outline-offset: 2px; }
+      .hw-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 4px;
+        margin-top: 16px;
+      }
+      .hw-grid button {
+        font: inherit; font-size: 15px; padding: 4px 0; cursor: pointer;
+        background: transparent; border: 1px solid #b3a68c; border-radius: 3px; color: #7a6c55;
+      }
+      .hw-grid button.done { background: #2a241c; color: #ecc482; border-color: #2a241c; }
+      .hw-grid button.current { outline: 2px solid #a8762b; outline-offset: 1px; }
+      .hw-grid button.optional { border-style: dashed; }
+      .hw-preview-label { font-size: 12px; color: #6b5d48; margin-top: 16px; }
+      .hw-preview {
+        margin-top: 6px;
+        min-height: 44px;
+        padding: 8px 10px;
+        background: #efe8d8;
+        border: 1px solid #b3a68c;
+        font-size: 26px;
+        line-height: 36px;
+        color: #1e1a15;
+        word-break: break-all;
+      }
+      .hw-foot { display: flex; justify-content: space-between; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+      .hw-status { font-size: 12px; color: #6b5d48; align-self: center; }
+      @media (max-width: 520px) {
+        #hwPad { width: 220px; height: 220px; }
+        .hw-grid { grid-template-columns: repeat(8, 1fr); }
+      }
     </style>
   </head>
   <body>
@@ -806,7 +937,9 @@
           <select id="fontSelect" class="font-select">
             <option value="Gowun Batang">고운바탕 · 부드럽게</option>
             <option value="Nanum Myeongjo">나눔명조 · 우아하게</option>
+            <option value="__hand__">내 손글씨</option>
           </select>
+          <button type="button" class="hw-train-btn" id="hwTrainBtn">✍️ 손글씨 가르치기</button>
           <label><input id="impactToggle" type="checkbox" checked /> 잉크 효과</label>
         </div>
 
@@ -820,6 +953,39 @@
             ><kbd>Enter</kbd> 줄바꿈 &nbsp; <kbd>Backspace</kbd> 지우기 &nbsp;
             <kbd>Shift</kbd> 쌍자음</span
           >
+        </div>
+      </div>
+    </div>
+
+    <!-- 내 손글씨 학습: 자모 24개를 한 번씩 쓰면 그 획으로 모든 한글 음절을 조합해 찍는다 -->
+    <div class="hw-modal" id="hwModal" hidden role="dialog" aria-modal="true" aria-labelledby="hwTitle">
+      <div class="hw-card">
+        <div class="hw-head">
+          <h2 id="hwTitle">타자기에게 내 글씨 가르치기</h2>
+          <button type="button" class="hw-close" id="hwClose" aria-label="닫기">×</button>
+        </div>
+        <p class="hw-sub">원하는 자음과 모음만 골라 크게 써 주세요. 배운 글자는 내 손글씨로, 배우지 않은 글자는 배운 획으로 조합해 비슷하게 찍습니다. 아래 글자 목록에서 언제든 추가로 가르칠 수 있어요.</p>
+        <div class="hw-body">
+          <div class="hw-target">
+            <div class="hw-target-char" id="hwTargetChar">ㄱ</div>
+            <div class="hw-target-meta" id="hwTargetMeta">1 / 24</div>
+          </div>
+          <div class="hw-pad-wrap">
+            <canvas id="hwPad" width="520" height="520" aria-label="손글씨 쓰는 칸"></canvas>
+            <div class="hw-actions">
+              <button type="button" id="hwClearPad">다시 쓰기</button>
+              <button type="button" id="hwPrev">이전</button>
+              <button type="button" class="primary" id="hwNext">저장하고 다음</button>
+            </div>
+          </div>
+        </div>
+        <div class="hw-grid" id="hwGrid"></div>
+        <div class="hw-preview-label">지금까지 배운 글씨로 미리보기</div>
+        <div class="hw-preview" id="hwPreview"></div>
+        <div class="hw-foot">
+          <button type="button" id="hwForget">배운 글씨 지우기</button>
+          <span class="hw-status" id="hwStatus"></span>
+          <button type="button" class="primary" id="hwUse">이 글씨로 타이핑하기</button>
         </div>
       </div>
     </div>
@@ -1391,8 +1557,8 @@
       // 화면 텍스트, T자 가이드와 램프 좌표, 종이 스크롤 갱신
       function updateScreen() {
         const comp = automata.getComposingChar();
-        committedEl.textContent = committedStr;
-        composingEl.textContent = comp;
+        renderCommitted();
+        renderComposing(comp);
 
         const totalLen = committedStr.length + (comp ? 1 : 0);
         charCountEl.textContent = totalLen.toLocaleString();
@@ -1431,8 +1597,20 @@
       }
 
       const fontSelect = document.getElementById("fontSelect");
+      let lastPrintedFont = fontSelect.value;
       fontSelect.addEventListener("change", () => {
-        paperSheet.style.fontFamily = `"${fontSelect.value}", serif`;
+        if (fontSelect.value === "__hand__") {
+          if (!hwHasAnyRequired()) {
+            fontSelect.value = lastPrintedFont;
+            openHwModal();
+            return;
+          }
+          setHandMode(true);
+        } else {
+          lastPrintedFont = fontSelect.value;
+          paperSheet.style.fontFamily = `"${fontSelect.value}", serif`;
+          setHandMode(false);
+        }
         updateScreen();
       });
       // 웹폰트가 늦게 도착해도 인쇄선과 램프 위치를 다시 맞춘다.
@@ -1616,6 +1794,7 @@
       window.addEventListener("keydown", (e) => {
         // 글꼴 메뉴의 방향키·Enter·문자 탐색은 종이에 입력하지 않는다.
         if (e.target === fontSelect || e.target === impactToggle) return;
+        if (isHwModalOpen() || e.target === hwTrainBtn) return;
         if (e.metaKey || e.ctrlKey || e.altKey) return;
 
         // Shift·CapsLock·한/영 키 단독 입력은 무시. IME 가 'Process' 로 보내도 e.code 는 살아 있으므로 아래에서 처리한다
@@ -1736,6 +1915,494 @@
         once: true,
       });
       window.addEventListener("resize", () => updateScreen());
+
+      /* =========================================================================
+   8. 내 손글씨 학습 — 자모 24개의 획을 모아 음절을 조합해 찍는다
+   -------------------------------------------------------------------------
+   · 샘플: 글자마다 획 목록(0~1 좌표). 한 글자에 여러 벌을 모을 수 있다.
+   · 조합: 음절을 초성·중성·종성으로 나누고, 모음 모양에 맞는 칸에 각 획을 맞춰 넣는다.
+   · 변형: 위치마다 고정된 난수로 샘플·기울기·크기를 골라, 같은 글자도 조금씩 다르게 찍힌다.
+   ========================================================================= */
+      const HW_STORAGE_KEY = "platen-handwriting-v1";
+      const HW_CONSONANTS = ["ㄱ","ㄴ","ㄷ","ㄹ","ㅁ","ㅂ","ㅅ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
+      const HW_VOWELS = ["ㅏ","ㅑ","ㅓ","ㅕ","ㅗ","ㅛ","ㅜ","ㅠ","ㅡ","ㅣ"];
+      const HW_DIGITS = ["0","1","2","3","4","5","6","7","8","9"];
+      const HW_REQUIRED = [...HW_CONSONANTS, ...HW_VOWELS];
+      const HW_TARGETS = [...HW_REQUIRED, ...HW_DIGITS];
+
+      // 모으지 않은 자모는 배운 조각을 나란히 붙여 만든다. 상자는 [x, y, 너비, 높이] (0~1 비율)
+      const HW_COMPOSITE = {
+        ㄲ: [["ㄱ", [0, 0, 0.54, 1]], ["ㄱ", [0.46, 0, 0.54, 1]]],
+        ㄸ: [["ㄷ", [0, 0, 0.54, 1]], ["ㄷ", [0.46, 0, 0.54, 1]]],
+        ㅃ: [["ㅂ", [0, 0, 0.54, 1]], ["ㅂ", [0.46, 0, 0.54, 1]]],
+        ㅆ: [["ㅅ", [0, 0, 0.54, 1]], ["ㅅ", [0.46, 0, 0.54, 1]]],
+        ㅉ: [["ㅈ", [0, 0, 0.54, 1]], ["ㅈ", [0.46, 0, 0.54, 1]]],
+        ㄳ: [["ㄱ", [0, 0, 0.52, 1]], ["ㅅ", [0.48, 0, 0.52, 1]]],
+        ㄵ: [["ㄴ", [0, 0, 0.52, 1]], ["ㅈ", [0.48, 0, 0.52, 1]]],
+        ㄶ: [["ㄴ", [0, 0, 0.52, 1]], ["ㅎ", [0.48, 0, 0.52, 1]]],
+        ㄺ: [["ㄹ", [0, 0, 0.52, 1]], ["ㄱ", [0.48, 0, 0.52, 1]]],
+        ㄻ: [["ㄹ", [0, 0, 0.52, 1]], ["ㅁ", [0.48, 0, 0.52, 1]]],
+        ㄼ: [["ㄹ", [0, 0, 0.52, 1]], ["ㅂ", [0.48, 0, 0.52, 1]]],
+        ㄽ: [["ㄹ", [0, 0, 0.52, 1]], ["ㅅ", [0.48, 0, 0.52, 1]]],
+        ㄾ: [["ㄹ", [0, 0, 0.52, 1]], ["ㅌ", [0.48, 0, 0.52, 1]]],
+        ㄿ: [["ㄹ", [0, 0, 0.52, 1]], ["ㅍ", [0.48, 0, 0.52, 1]]],
+        ㅀ: [["ㄹ", [0, 0, 0.52, 1]], ["ㅎ", [0.48, 0, 0.52, 1]]],
+        ㅄ: [["ㅂ", [0, 0, 0.52, 1]], ["ㅅ", [0.48, 0, 0.52, 1]]],
+        ㅐ: [["ㅏ", [0, 0, 0.62, 1]], ["ㅣ", [0.62, 0, 0.38, 1]]],
+        ㅒ: [["ㅑ", [0, 0, 0.62, 1]], ["ㅣ", [0.62, 0, 0.38, 1]]],
+        ㅔ: [["ㅓ", [0, 0, 0.62, 1]], ["ㅣ", [0.62, 0, 0.38, 1]]],
+        ㅖ: [["ㅕ", [0, 0, 0.62, 1]], ["ㅣ", [0.62, 0, 0.38, 1]]],
+      };
+      // ㅘ 같은 겹모음: 아래 가로 획(ㅗ·ㅜ·ㅡ)과 오른쪽 세로 획으로 나눈다
+      const HW_MIXED_VOWEL = {
+        ㅘ: ["ㅗ", "ㅏ"], ㅙ: ["ㅗ", "ㅐ"], ㅚ: ["ㅗ", "ㅣ"],
+        ㅝ: ["ㅜ", "ㅓ"], ㅞ: ["ㅜ", "ㅔ"], ㅟ: ["ㅜ", "ㅣ"], ㅢ: ["ㅡ", "ㅣ"],
+      };
+      const HW_HORIZONTAL = ["ㅗ", "ㅛ", "ㅜ", "ㅠ", "ㅡ"];
+
+      // 음절 칸 배치 (100×100 상자 기준). 모음 모양과 받침 유무에 따라 다르다.
+      const HW_LAYOUT = {
+        vertical: { cho: [6, 14, 52, 72], jung: [58, 4, 36, 92] },
+        verticalJong: { cho: [6, 6, 52, 46], jung: [58, 2, 36, 60], jong: [16, 62, 66, 34] },
+        horizontal: { cho: [20, 6, 60, 46], jung: [4, 54, 92, 38] },
+        horizontalJong: { cho: [22, 3, 56, 33], jung: [5, 37, 90, 26], jong: [18, 64, 64, 33] },
+        mixed: { cho: [6, 6, 50, 44], lower: [4, 48, 60, 40], side: [62, 2, 34, 94] },
+        mixedJong: { cho: [6, 3, 48, 34], lower: [4, 35, 58, 26], side: [60, 2, 34, 64], jong: [16, 66, 64, 31] },
+        lone: { all: [14, 14, 72, 72] },
+        digit: { all: [14, 10, 72, 82] },
+      };
+
+      let hwSamples = {}; // { "ㄱ": [ [ [ [x,y], ... ] 획 ], ... 여러 벌 ] }
+      let isHandMode = false;
+      let hwRenderedChars = []; // 지금 committedEl 에 그려진 글자들 (뒤에 붙은 것만 새로 그리기 위해)
+
+      try {
+        const saved = JSON.parse(localStorage.getItem(HW_STORAGE_KEY) || "{}");
+        if (saved && typeof saved === "object") hwSamples = saved;
+      } catch (e) {}
+
+      function hwSave() {
+        try {
+          localStorage.setItem(HW_STORAGE_KEY, JSON.stringify(hwSamples));
+        } catch (e) {}
+      }
+
+      function hwHasAnyRequired() {
+        return HW_REQUIRED.some((j) => hwSamples[j] && hwSamples[j].length);
+      }
+
+      // 위치와 글자로 정해지는 난수: 다시 그려도 같은 자리의 글자는 같은 모양을 유지한다
+      function hwRandom(seed) {
+        let t = seed >>> 0;
+        return () => {
+          t += 0x6d2b79f5;
+          let r = Math.imul(t ^ (t >>> 15), 1 | t);
+          r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
+          return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      // 그 자모를 그릴 수 있는가 (직접 배웠거나 배운 조각으로 조합 가능)
+      function hwCanDraw(jamo) {
+        if (hwSamples[jamo] && hwSamples[jamo].length) return true;
+        if (HW_COMPOSITE[jamo]) return HW_COMPOSITE[jamo].every(([p]) => hwCanDraw(p));
+        if (HW_MIXED_VOWEL[jamo]) return HW_MIXED_VOWEL[jamo].every(hwCanDraw);
+        return false;
+      }
+
+      // 샘플 한 벌을 상자 안에 맞춰 넣은 획 목록으로 바꾼다
+      function hwFitSample(sample, box, rand) {
+        let minX = 1, minY = 1, maxX = 0, maxY = 0;
+        sample.forEach((stroke) =>
+          stroke.forEach(([x, y]) => {
+            if (x < minX) minX = x;
+            if (y < minY) minY = y;
+            if (x > maxX) maxX = x;
+            if (y > maxY) maxY = y;
+          }),
+        );
+        const w = Math.max(maxX - minX, 0.02);
+        const h = Math.max(maxY - minY, 0.02);
+        const [bx, by, bw, bh] = box;
+        const pad = 0.06;
+        const iw = bw * (1 - pad * 2);
+        const ih = bh * (1 - pad * 2);
+        const base = Math.min(iw / w, ih / h);
+        // 칸을 채우도록 가로·세로를 조금 늘리되 원래 비율에서 너무 멀어지지 않게
+        const sx = Math.min(iw / w, base * 1.55);
+        const sy = Math.min(ih / h, base * 1.55);
+        const jx = (rand() - 0.5) * bw * 0.05;
+        const jy = (rand() - 0.5) * bh * 0.05;
+        const ox = bx + (bw - w * sx) / 2 + jx;
+        const oy = by + (bh - h * sy) / 2 + jy;
+        return sample.map((stroke) =>
+          stroke.map(([x, y]) => [ox + (x - minX) * sx, oy + (y - minY) * sy]),
+        );
+      }
+
+      // 자모 하나를 상자에 그린다. 조합 자모는 조각 상자로 나눠 재귀
+      function hwPlaceJamo(jamo, box, rand, out) {
+        const own = hwSamples[jamo];
+        if (own && own.length) {
+          const sample = own[Math.floor(rand() * own.length)];
+          out.push(...hwFitSample(sample, box, rand));
+          return;
+        }
+        if (HW_COMPOSITE[jamo]) {
+          const [bx, by, bw, bh] = box;
+          HW_COMPOSITE[jamo].forEach(([part, [px, py, pw, ph]]) =>
+            hwPlaceJamo(part, [bx + px * bw, by + py * bh, pw * bw, ph * bh], rand, out),
+          );
+        }
+      }
+
+      function hwStrokesToPath(strokes) {
+        const f = (n) => Math.round(n * 10) / 10;
+        return strokes
+          .map((pts) => {
+            if (pts.length === 1) {
+              const [x, y] = pts[0];
+              return `M${f(x)} ${f(y)}l0.1 0`;
+            }
+            // 점 사이 중점을 지나는 2차 곡선으로 부드럽게
+            let d = `M${f(pts[0][0])} ${f(pts[0][1])}`;
+            for (let i = 1; i < pts.length - 1; i++) {
+              const mx = (pts[i][0] + pts[i + 1][0]) / 2;
+              const my = (pts[i][1] + pts[i + 1][1]) / 2;
+              d += `Q${f(pts[i][0])} ${f(pts[i][1])} ${f(mx)} ${f(my)}`;
+            }
+            const last = pts[pts.length - 1];
+            return d + `L${f(last[0])} ${f(last[1])}`;
+          })
+          .join("");
+      }
+
+      // 글자 하나 → 획 목록. 그릴 수 없으면 null (그 글자는 기존 글꼴로 찍힌다)
+      function hwBuildStrokes(ch, rand) {
+        const code = ch.charCodeAt(0);
+        const out = [];
+        const L = HW_LAYOUT;
+
+        if (code >= 0xac00 && code <= 0xd7a3) {
+          const idx = code - 0xac00;
+          const cho = CHO[Math.floor(idx / 588)];
+          const jung = JUNG[Math.floor((idx % 588) / 28)];
+          const jong = JONG[idx % 28];
+          if (!hwCanDraw(cho) || !hwCanDraw(jung) || (jong && !hwCanDraw(jong))) return null;
+
+          if (HW_MIXED_VOWEL[jung]) {
+            const lay = jong ? L.mixedJong : L.mixed;
+            const [lower, side] = HW_MIXED_VOWEL[jung];
+            hwPlaceJamo(cho, lay.cho, rand, out);
+            hwPlaceJamo(lower, lay.lower, rand, out);
+            hwPlaceJamo(side, lay.side, rand, out);
+            if (jong) hwPlaceJamo(jong, lay.jong, rand, out);
+          } else {
+            const horiz = HW_HORIZONTAL.includes(jung);
+            const lay = horiz
+              ? jong ? L.horizontalJong : L.horizontal
+              : jong ? L.verticalJong : L.vertical;
+            hwPlaceJamo(cho, lay.cho, rand, out);
+            hwPlaceJamo(jung, lay.jung, rand, out);
+            if (jong) hwPlaceJamo(jong, lay.jong, rand, out);
+          }
+          return out;
+        }
+
+        // 홀로 선 자모 (ㅋㅋ, ㅠㅠ)
+        if (code >= 0x3131 && code <= 0x3163) {
+          if (HW_MIXED_VOWEL[ch]) {
+            if (!hwCanDraw(ch)) return null;
+            const [lower, side] = HW_MIXED_VOWEL[ch];
+            hwPlaceJamo(lower, [10, 40, 58, 44], rand, out);
+            hwPlaceJamo(side, [62, 10, 30, 80], rand, out);
+            return out;
+          }
+          if (!hwCanDraw(ch)) return null;
+          hwPlaceJamo(ch, L.lone.all, rand, out);
+          return out;
+        }
+
+        if (HW_DIGITS.includes(ch) && hwCanDraw(ch)) {
+          hwPlaceJamo(ch, L.digit.all, rand, out);
+          return out;
+        }
+        return null;
+      }
+
+      // 글자 하나를 손글씨 SVG 로. 같은 위치·글자는 늘 같은 모양
+      function hwMakeGlyph(ch, position) {
+        const rand = hwRandom(position * 2654435761 + ch.charCodeAt(0) * 40503);
+        const strokes = hwBuildStrokes(ch, rand);
+        if (!strokes) return null;
+        const isDigit = HW_DIGITS.includes(ch);
+        const rot = (rand() - 0.5) * 6;
+        const scale = 0.93 + rand() * 0.1;
+        const dy = (rand() - 0.5) * 5;
+        const width = 6.2 + rand() * 1.6;
+        const ns = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(ns, "svg");
+        svg.setAttribute("class", isDigit ? "hw-glyph digit" : "hw-glyph");
+        svg.setAttribute("viewBox", isDigit ? "18 0 64 100" : "0 0 100 100");
+        svg.setAttribute("role", "img");
+        svg.setAttribute("aria-label", ch);
+        const g = document.createElementNS(ns, "g");
+        g.setAttribute(
+          "transform",
+          `translate(50 ${50 + dy}) rotate(${rot.toFixed(2)}) scale(${scale.toFixed(3)}) translate(-50 -50)`,
+        );
+        const path = document.createElementNS(ns, "path");
+        path.setAttribute("d", hwStrokesToPath(strokes));
+        path.setAttribute("stroke-width", width.toFixed(2));
+        g.appendChild(path);
+        svg.appendChild(g);
+        return svg;
+      }
+
+      function hwNodeFor(ch, position) {
+        if (ch === "\n" || ch === " ") return document.createTextNode(ch);
+        return hwMakeGlyph(ch, position) || document.createTextNode(ch);
+      }
+
+      // 손글씨 모드에서는 바뀐 뒤쪽만 다시 그린다 (3,000자에서도 키 하나가 가볍도록)
+      function renderCommitted() {
+        if (!isHandMode) {
+          if (hwRenderedChars.length || committedEl.textContent !== committedStr) {
+            committedEl.textContent = committedStr;
+          }
+          hwRenderedChars = [];
+          return;
+        }
+        const chars = Array.from(committedStr);
+        let same = 0;
+        while (
+          same < hwRenderedChars.length &&
+          same < chars.length &&
+          hwRenderedChars[same] === chars[same]
+        ) same++;
+        if (same === 0 && committedEl.firstChild && !hwRenderedChars.length) {
+          committedEl.textContent = "";
+        }
+        while (committedEl.childNodes.length > same) committedEl.lastChild.remove();
+        const frag = document.createDocumentFragment();
+        for (let i = same; i < chars.length; i++) frag.appendChild(hwNodeFor(chars[i], i));
+        committedEl.appendChild(frag);
+        hwRenderedChars = chars;
+      }
+
+      function renderComposing(comp) {
+        if (!isHandMode || !comp) {
+          composingEl.textContent = comp;
+          return;
+        }
+        composingEl.textContent = "";
+        composingEl.appendChild(hwNodeFor(comp, Array.from(committedStr).length));
+      }
+
+      function setHandMode(on) {
+        isHandMode = on;
+        hwRenderedChars = [];
+        committedEl.textContent = "";
+        if (on) fontSelect.value = "__hand__";
+        try {
+          localStorage.setItem(HW_STORAGE_KEY + ":on", on ? "1" : "0");
+        } catch (e) {}
+      }
+
+      /* ---------- 손글씨 가르치기 창 ---------- */
+      const hwModal = document.getElementById("hwModal");
+      const hwTrainBtn = document.getElementById("hwTrainBtn");
+      const hwPad = document.getElementById("hwPad");
+      const hwCtx = hwPad.getContext("2d");
+      const hwTargetChar = document.getElementById("hwTargetChar");
+      const hwTargetMeta = document.getElementById("hwTargetMeta");
+      const hwGrid = document.getElementById("hwGrid");
+      const hwPreview = document.getElementById("hwPreview");
+      const hwStatus = document.getElementById("hwStatus");
+      const HW_PREVIEW_TEXT = "타자기가 내 글씨를 배웠다 2026";
+
+      let hwIndex = 0;
+      let hwStrokes = [];
+      let hwDrawing = null;
+      let hwLastFocus = null;
+
+      function isHwModalOpen() {
+        return !hwModal.hidden;
+      }
+
+      function hwDrawPad() {
+        const S = hwPad.width;
+        hwCtx.clearRect(0, 0, S, S);
+        // 원고지처럼 가는 십자 안내선
+        hwCtx.strokeStyle = "rgba(140, 120, 90, 0.35)";
+        hwCtx.lineWidth = 2;
+        hwCtx.setLineDash([10, 10]);
+        hwCtx.beginPath();
+        hwCtx.moveTo(S / 2, 20); hwCtx.lineTo(S / 2, S - 20);
+        hwCtx.moveTo(20, S / 2); hwCtx.lineTo(S - 20, S / 2);
+        hwCtx.stroke();
+        hwCtx.setLineDash([]);
+        hwCtx.strokeStyle = "#1e1a15";
+        hwCtx.lineWidth = S * 0.035;
+        hwCtx.lineCap = "round";
+        hwCtx.lineJoin = "round";
+        hwStrokes.forEach((pts) => {
+          hwCtx.beginPath();
+          pts.forEach(([x, y], i) => {
+            if (i === 0) hwCtx.moveTo(x * S, y * S);
+            else hwCtx.lineTo(x * S, y * S);
+          });
+          if (pts.length === 1) hwCtx.lineTo(pts[0][0] * S + 0.5, pts[0][1] * S);
+          hwCtx.stroke();
+        });
+      }
+
+      function hwPointFrom(e) {
+        const r = hwPad.getBoundingClientRect();
+        const x = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+        const y = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height));
+        return [Math.round(x * 1000) / 1000, Math.round(y * 1000) / 1000];
+      }
+
+      hwPad.addEventListener("pointerdown", (e) => {
+        e.preventDefault();
+        hwPad.setPointerCapture(e.pointerId);
+        hwDrawing = [hwPointFrom(e)];
+        hwStrokes.push(hwDrawing);
+        hwDrawPad();
+      });
+      hwPad.addEventListener("pointermove", (e) => {
+        if (!hwDrawing) return;
+        const p = hwPointFrom(e);
+        const last = hwDrawing[hwDrawing.length - 1];
+        // 너무 촘촘한 점은 버려서 저장 크기를 줄인다
+        if (Math.hypot(p[0] - last[0], p[1] - last[1]) < 0.012) return;
+        hwDrawing.push(p);
+        hwDrawPad();
+      });
+      const hwEndStroke = () => { hwDrawing = null; };
+      hwPad.addEventListener("pointerup", hwEndStroke);
+      hwPad.addEventListener("pointercancel", hwEndStroke);
+
+      function hwRefresh() {
+        const target = HW_TARGETS[hwIndex];
+        const count = (hwSamples[target] || []).length;
+        const isOptional = HW_DIGITS.includes(target);
+        hwTargetChar.textContent = target;
+        hwTargetMeta.textContent =
+          `${hwIndex + 1} / ${HW_TARGETS.length}` +
+          (isOptional ? " · 선택" : "") +
+          (count ? ` · ${count}벌 배움` : "");
+
+        hwGrid.textContent = "";
+        HW_TARGETS.forEach((t, i) => {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.textContent = t;
+          const n = (hwSamples[t] || []).length;
+          if (n) b.classList.add("done");
+          if (HW_DIGITS.includes(t)) b.classList.add("optional");
+          if (i === hwIndex) b.classList.add("current");
+          b.setAttribute("aria-label", `${t}${n ? `, ${n}벌 배움` : ", 아직 안 씀"}`);
+          b.addEventListener("click", () => hwGoTo(i));
+          hwGrid.appendChild(b);
+        });
+
+        hwPreview.textContent = "";
+        Array.from(HW_PREVIEW_TEXT).forEach((ch, i) =>
+          hwPreview.appendChild(hwNodeFor(ch, i + 7)),
+        );
+
+        const learned = HW_REQUIRED.filter((j) => hwSamples[j] && hwSamples[j].length).length;
+        hwStatus.textContent = learned
+          ? `배운 글자 ${learned}개 · 나머지는 배운 획으로 조합해요`
+          : "자음이나 모음을 하나 이상 가르쳐 주세요";
+        document.getElementById("hwUse").disabled = !hwHasAnyRequired();
+      }
+
+      function hwGoTo(i) {
+        hwIndex = (i + HW_TARGETS.length) % HW_TARGETS.length;
+        hwStrokes = [];
+        hwDrawPad();
+        hwRefresh();
+      }
+
+      function hwCommitCurrent() {
+        if (!hwStrokes.length) return false;
+        const target = HW_TARGETS[hwIndex];
+        if (!hwSamples[target]) hwSamples[target] = [];
+        hwSamples[target].push(hwStrokes);
+        // 한 글자에 다섯 벌까지. 오래된 것부터 밀어낸다
+        if (hwSamples[target].length > 5) hwSamples[target].shift();
+        hwSave();
+        hwRenderedChars = [];
+        return true;
+      }
+
+      document.getElementById("hwNext").addEventListener("click", () => {
+        hwCommitCurrent();
+        // 다음 칸: 아직 안 쓴 필수 자모가 있으면 거기로, 없으면 순서대로
+        const nextMissing = HW_TARGETS.findIndex(
+          (t, i) => i > hwIndex && !(hwSamples[t] && hwSamples[t].length),
+        );
+        hwGoTo(nextMissing >= 0 ? nextMissing : hwIndex + 1);
+      });
+      document.getElementById("hwPrev").addEventListener("click", () => hwGoTo(hwIndex - 1));
+      document.getElementById("hwClearPad").addEventListener("click", () => {
+        hwStrokes = [];
+        hwDrawPad();
+      });
+      document.getElementById("hwForget").addEventListener("click", () => {
+        if (!confirm("배운 손글씨를 모두 지울까요?")) return;
+        hwSamples = {};
+        hwSave();
+        if (isHandMode) {
+          setHandMode(false);
+          fontSelect.value = lastPrintedFont;
+          updateScreen();
+        }
+        hwGoTo(0);
+      });
+      document.getElementById("hwUse").addEventListener("click", () => {
+        hwCommitCurrent();
+        closeHwModal();
+        setHandMode(true);
+        updateScreen();
+      });
+
+      function openHwModal() {
+        stopDemo();
+        hwLastFocus = document.activeElement;
+        hwModal.hidden = false;
+        const firstMissing = HW_TARGETS.findIndex((t) => !(hwSamples[t] && hwSamples[t].length));
+        hwGoTo(firstMissing >= 0 ? firstMissing : 0);
+        document.getElementById("hwNext").focus();
+      }
+      function closeHwModal() {
+        hwModal.hidden = true;
+        hwStrokes = [];
+        if (isHandMode) updateScreen();
+        desk.focus();
+      }
+
+      hwTrainBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        openHwModal();
+      });
+      document.getElementById("hwClose").addEventListener("click", closeHwModal);
+      hwModal.addEventListener("click", (e) => {
+        if (e.target === hwModal) closeHwModal();
+      });
+      hwModal.addEventListener("keydown", (e) => {
+        e.stopPropagation();
+        if (e.key === "Escape") closeHwModal();
+        else if (e.key === "Enter" && e.target === hwPad) document.getElementById("hwNext").click();
+      });
+
+      // 지난번에 손글씨로 쓰고 있었다면 그대로 이어서
+      try {
+        if (localStorage.getItem(HW_STORAGE_KEY + ":on") === "1" && hwHasAnyRequired()) setHandMode(true);
+      } catch (e) {}
 
       // 초기 실행
       updateScreen();
