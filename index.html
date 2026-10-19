@@ -2382,7 +2382,9 @@
         hwModal.hidden = true;
         hwStrokes = [];
         if (isHandMode) updateScreen();
-        desk.focus();
+        if (hwLastFocus && document.contains(hwLastFocus)) hwLastFocus.focus();
+        else desk.focus();
+        hwLastFocus = null;
       }
 
       hwTrainBtn.addEventListener("click", (e) => {
@@ -2396,6 +2398,27 @@
       hwModal.addEventListener("keydown", (e) => {
         e.stopPropagation();
         if (e.key === "Escape") closeHwModal();
+        else if (e.key === "Tab") {
+          const focusable = Array.from(
+            hwModal.querySelectorAll(
+              'button:not(:disabled), a[href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])',
+            ),
+          ).filter((el) => el.tabIndex >= 0 && el.getClientRects().length > 0);
+          if (!focusable.length) {
+            e.preventDefault();
+            return;
+          }
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+          const activeOutsideModal = !hwModal.contains(document.activeElement);
+          if (e.shiftKey && (document.activeElement === first || activeOutsideModal)) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && (document.activeElement === last || activeOutsideModal)) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
         else if (e.key === "Enter" && e.target === hwPad) document.getElementById("hwNext").click();
       });
 
